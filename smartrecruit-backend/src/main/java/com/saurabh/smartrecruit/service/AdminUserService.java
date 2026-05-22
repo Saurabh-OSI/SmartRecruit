@@ -10,19 +10,25 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class AdminUserService {
+
+    private static final Set<Role> STAFF_ROLES = Set.of(Role.ADMIN, Role.HR);
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     public List<StaffUserResponse> getStaffUsers() {
 
-        return userRepository.findAllByRoleInOrderByCreatedAtDesc(List.of(Role.ADMIN, Role.HR))
+        return userRepository.findAll()
                 .stream()
+                .filter(user -> STAFF_ROLES.contains(user.getRole()))
+                .sorted(Comparator.comparing(User::getCreatedAt, Comparator.nullsLast(Comparator.naturalOrder())).reversed())
                 .map(this::toStaffUserResponse)
                 .toList();
     }
