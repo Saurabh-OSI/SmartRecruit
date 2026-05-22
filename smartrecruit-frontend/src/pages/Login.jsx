@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api/axiosConfig";
+import { getDefaultRouteForRole } from "../utils/auth";
 
 function Login() {
   const navigate = useNavigate();
@@ -36,15 +37,8 @@ function Login() {
           role: response.data.role,
         })
       );
-     const role = response.data.role;
-
-if (role === "HR" || role === "ADMIN") {
-  navigate("/dashboard");
-} else {
-  navigate("/jobs");
-}
-
-window.location.reload();
+      navigate(getDefaultRouteForRole(response.data.role));
+      window.location.reload();
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
     }

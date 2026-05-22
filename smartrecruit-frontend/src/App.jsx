@@ -8,22 +8,28 @@ import Applications from "./pages/Applications";
 import Interviews from "./pages/Interviews";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
+import { getDefaultRouteForRole, getStoredUser } from "./utils/auth";
 
 function App() {
   const token = localStorage.getItem("token");
+  const user = getStoredUser();
+  const defaultAuthenticatedRoute = getDefaultRouteForRole(user?.role);
 
   return (
     <>
       {token && <Navbar />}
 
       <Routes>
-        <Route path="/" element={token ? <Navigate to="/dashboard" /> : <Login />} />
+        <Route
+          path="/"
+          element={token ? <Navigate to={defaultAuthenticatedRoute} replace /> : <Login />}
+        />
         <Route path="/register" element={<Register />} />
 
         <Route
           path="/dashboard"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={["HR", "ADMIN"]}>
               <Dashboard />
             </ProtectedRoute>
           }
@@ -41,7 +47,7 @@ function App() {
         <Route
           path="/profile"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={["CANDIDATE"]}>
               <CandidateProfile />
             </ProtectedRoute>
           }
