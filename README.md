@@ -53,6 +53,10 @@ $env:DB_USERNAME="postgres"
 $env:DB_PASSWORD="your_postgres_password"
 $env:JWT_SECRET="replace-with-a-long-random-secret"
 $env:JWT_EXPIRATION_MS="3600000"
+$env:APP_BOOTSTRAP_ADMIN_EMAIL="admin@smartrecruit.local"
+$env:APP_BOOTSTRAP_ADMIN_PASSWORD="change-this-admin-password"
+$env:APP_BOOTSTRAP_HR_EMAIL="hr@smartrecruit.local"
+$env:APP_BOOTSTRAP_HR_PASSWORD="change-this-hr-password"
 ```
 
 ### 3. Run the backend
@@ -134,3 +138,4 @@ The SPA route rewrite for Vercel is already configured in [smartrecruit-frontend
 - Hibernate is set to `ddl-auto=update` for developer convenience.
 - Public self-registration creates `CANDIDATE` accounts only.
 - `HR` and `ADMIN` accounts should be provisioned separately for trusted users.
+- Optional bootstrap env vars can create one `ADMIN` and one `HR` account automatically on backend startup if those emails do not already exist.
