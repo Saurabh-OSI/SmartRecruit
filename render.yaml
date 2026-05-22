@@ -1,11 +1,11 @@
 services:
   - type: web
     name: smartrecruit-backend
-    runtime: java
+    runtime: docker
     plan: free
     rootDir: smartrecruit-backend
-    buildCommand: chmod +x ./mvnw && ./mvnw clean package -DskipTests
-    startCommand: java -jar target/smartrecruit-0.0.1-SNAPSHOT.jar
+    dockerfilePath: smartrecruit-backend/Dockerfile
+    dockerContext: smartrecruit-backend
     healthCheckPath: /api/health
     autoDeploy: true
     envVars:
