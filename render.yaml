@@ -4,8 +4,8 @@ services:
     runtime: docker
     plan: free
     rootDir: smartrecruit-backend
-    dockerfilePath: smartrecruit-backend/Dockerfile
-    dockerContext: smartrecruit-backend
+    dockerfilePath: Dockerfile
+    dockerContext: .
     healthCheckPath: /api/health
     autoDeploy: true
     envVars:
