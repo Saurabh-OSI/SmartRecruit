@@ -2,6 +2,8 @@
 
 SmartRecruit is a full-stack recruitment management platform built with React and Spring Boot. It supports role-based workflows for candidates, HR users, and admins across job posting, job applications, interview scheduling, and hiring analytics.
 
+Developed by Saurabh Kumar Singh.
+
 ## Features
 
 - JWT-based authentication with `ADMIN`, `HR`, and `CANDIDATE` roles
