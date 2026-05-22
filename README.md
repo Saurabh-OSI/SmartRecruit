@@ -4,6 +4,14 @@ SmartRecruit is a full-stack recruitment management platform built with React an
 
 Developed by Saurabh Kumar Singh.
 
+##  Use these credentials: 
+
+Admin: admin@a.co 
+Passward: SmartRecruitAdmin2026
+
+- The admin account can be used to access the main dashboard and manage overall system activities such as HR account creation, user management, job postings, candidate applications, and interview-related operations.
+- HR account can also manage user management, job postings, candidate applications, and interview-related operations.
+
 ## Features
 
 - JWT-based authentication with `ADMIN`, `HR`, and `CANDIDATE` roles
