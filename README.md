@@ -74,6 +74,42 @@ npm run dev
 
 The frontend starts on `http://localhost:5173`.
 
+## Deployment
+
+### Render
+
+The backend is ready to deploy on Render with the root-level [render.yaml](/C:/Users/singh/Documents/Codex/2026-05-22/can-you-access-this-repo-saurabh/render.yaml) Blueprint.
+
+Recommended flow:
+
+1. In Render, create a new Blueprint from this repository.
+2. Let Render provision:
+   `smartrecruit-backend` web service
+   `smartrecruit-db` PostgreSQL database
+3. After the backend deploy finishes, copy the Render backend URL, which will look like:
+   `https://smartrecruit-backend.onrender.com`
+
+Backend details:
+
+- Root directory: `smartrecruit-backend`
+- Build command: `chmod +x ./mvnw && ./mvnw clean package -DskipTests`
+- Start command: `java -jar target/smartrecruit-0.0.1-SNAPSHOT.jar`
+- Health check path: `/api/health`
+
+### Vercel
+
+The frontend is ready to deploy on Vercel from the [smartrecruit-frontend](/C:/Users/singh/Documents/Codex/2026-05-22/can-you-access-this-repo-saurabh/smartrecruit-frontend) directory.
+
+Recommended flow:
+
+1. Import this same GitHub repository into Vercel.
+2. Set the Root Directory to `smartrecruit-frontend`.
+3. Add the environment variable:
+   `VITE_API_BASE_URL=https://<your-render-backend>.onrender.com/api`
+4. Deploy.
+
+The SPA route rewrite for Vercel is already configured in [smartrecruit-frontend/vercel.json](/C:/Users/singh/Documents/Codex/2026-05-22/can-you-access-this-repo-saurabh/smartrecruit-frontend/vercel.json).
+
 ## Main Modules
 
 - Auth: user registration and login
@@ -94,7 +130,7 @@ The frontend starts on `http://localhost:5173`.
 
 ## Notes
 
-- CORS is currently configured for `http://localhost:5173`.
+- CORS is configured through `CORS_ALLOWED_ORIGIN_PATTERNS` and defaults to `http://localhost:5173`.
 - Hibernate is set to `ddl-auto=update` for developer convenience.
 - Public self-registration creates `CANDIDATE` accounts only.
 - `HR` and `ADMIN` accounts should be provisioned separately for trusted users.

@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: smartrecruit-backend
+    runtime: java
+    plan: free
+    rootDir: smartrecruit-backend
+    buildCommand: chmod +x ./mvnw && ./mvnw clean package -DskipTests
+    startCommand: java -jar target/smartrecruit-0.0.1-SNAPSHOT.jar
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: DB_URL
+        fromDatabase:
+          name: smartrecruit-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRATION_MS
+        value: "3600000"
+      - key: DDL_AUTO
+        value: update
+      - key: SHOW_SQL
+        value: "false"
+      - key: CORS_ALLOWED_ORIGIN_PATTERNS
+        value: http://localhost:5173,https://*.vercel.app
+
+databases:
+  - name: smartrecruit-db
+    plan: free
+    databaseName: smartrecruit
+    user: smartrecruit
