@@ -5,6 +5,7 @@ function Navbar() {
   const user = JSON.parse(localStorage.getItem("user"));
 
   const isHRorAdmin = user?.role === "HR" || user?.role === "ADMIN";
+  const isAdmin = user?.role === "ADMIN";
   const isCandidate = user?.role === "CANDIDATE";
 
   const logout = () => {
@@ -20,6 +21,7 @@ function Navbar() {
 
       <div className="nav-links">
         {isHRorAdmin && <Link to="/dashboard">Dashboard</Link>}
+        {isAdmin && <Link to="/staff">Staff</Link>}
 
         <Link to="/jobs">Jobs</Link>
 

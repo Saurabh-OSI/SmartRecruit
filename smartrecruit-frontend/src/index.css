@@ -1008,6 +1008,52 @@ a {
   background: #991b1b;
 }
 
+.staff-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin: 24px 0;
+}
+
+.staff-summary-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+}
+
+.staff-summary-card span {
+  display: block;
+  font-size: 34px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.staff-summary-card p {
+  margin: 8px 0 0;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.staff-role-chip {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.staff-role-chip.admin {
+  background: #ede9fe;
+  color: #5b21b6;
+}
+
+.staff-role-chip.hr {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
 /* =========================
    RESPONSIVE DESIGN
 ========================= */
@@ -1086,6 +1132,7 @@ a {
 }
 
 @media (max-width: 600px) {
+  .staff-summary-grid,
   .grid,
   .stats-grid,
   .insight-grid,

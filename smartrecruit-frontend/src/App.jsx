@@ -6,6 +6,7 @@ import Jobs from "./pages/Jobs";
 import CandidateProfile from "./pages/CandidateProfile";
 import Applications from "./pages/Applications";
 import Interviews from "./pages/Interviews";
+import StaffManagement from "./pages/StaffManagement";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
 import { getDefaultRouteForRole, getStoredUser } from "./utils/auth";
@@ -67,6 +68,15 @@ function App() {
           element={
             <ProtectedRoute>
               <Interviews />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/staff"
+          element={
+            <ProtectedRoute allowedRoles={["ADMIN"]}>
+              <StaffManagement />
             </ProtectedRoute>
           }
         />
