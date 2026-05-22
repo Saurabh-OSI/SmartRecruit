@@ -9,7 +9,6 @@ function Register() {
     name: "",
     email: "",
     password: "",
-    role: "CANDIDATE",
   });
 
   const [error, setError] = useState("");
@@ -50,7 +49,7 @@ function Register() {
     <div className="auth-container">
       <form className="auth-card" onSubmit={handleRegister}>
         <h1>SmartRecruit</h1>
-        <h2>Register</h2>
+        <h2>Create Candidate Account</h2>
 
         {error && <p className="error">{error}</p>}
 
@@ -80,12 +79,6 @@ function Register() {
           onChange={handleChange}
           required
         />
-
-        <select name="role" value={formData.role} onChange={handleChange}>
-          <option value="CANDIDATE">Candidate</option>
-          <option value="HR">HR</option>
-          <option value="ADMIN">Admin</option>
-        </select>
 
         <button type="submit">Register</button>
 

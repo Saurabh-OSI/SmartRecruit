@@ -32,24 +32,22 @@ public class AuthService {
             throw new BadRequestException("Email already registered");
         }
 
-        Role role = request.getRole();
-
-        if (role == null) {
-            role = Role.CANDIDATE;
+        if (request.getRole() != null && request.getRole() != Role.CANDIDATE) {
+            throw new BadRequestException("Self-registration is only available for candidate accounts");
         }
 
         User user = new User();
         user.setName(request.getName());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(role);
+        user.setRole(Role.CANDIDATE);
 
         User savedUser = userRepository.save(user);
 
         UserDetails userDetails = org.springframework.security.core.userdetails.User
                 .withUsername(savedUser.getEmail())
                 .password(savedUser.getPassword())
-                .authorities("ROLE_" + savedUser.getRole().name())
+                .authorities("ROLE_" + Role.CANDIDATE.name())
                 .build();
 
         String token = jwtService.generateToken(userDetails);

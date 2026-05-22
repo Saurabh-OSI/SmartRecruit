@@ -17,6 +17,7 @@ import com.saurabh.smartrecruit.exception.ResourceNotFoundException;
 import com.saurabh.smartrecruit.repository.ApplicationRepository;
 import com.saurabh.smartrecruit.repository.JobRepository;
 import com.saurabh.smartrecruit.repository.UserRepository;
+import com.saurabh.smartrecruit.security.AccessControlService;
 
 @Service
 public class ApplicationService {
@@ -24,16 +25,21 @@ public class ApplicationService {
     private final ApplicationRepository applicationRepository;
     private final UserRepository userRepository;
     private final JobRepository jobRepository;
+    private final AccessControlService accessControlService;
 
     public ApplicationService(ApplicationRepository applicationRepository,
                               UserRepository userRepository,
-                              JobRepository jobRepository) {
+                              JobRepository jobRepository,
+                              AccessControlService accessControlService) {
         this.applicationRepository = applicationRepository;
         this.userRepository = userRepository;
         this.jobRepository = jobRepository;
+        this.accessControlService = accessControlService;
     }
 
     public ApplicationResponse applyForJob(ApplicationRequest request) {
+
+        accessControlService.requireCandidateOwnership(request.getCandidateId());
 
         User candidate = userRepository.findById(request.getCandidateId())
         .orElseThrow(() -> new ResourceNotFoundException("Candidate not found with id: " + request.getCandidateId()));
@@ -73,10 +79,14 @@ if (applicationRepository.existsByCandidateIdAndJobId(request.getCandidateId(), 
         JobApplication application = applicationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Application not found with id: " + id));
 
+        accessControlService.requireCandidateOwnership(application.getCandidate().getId());
+
         return mapToResponse(application);
     }
 
     public List<ApplicationResponse> getApplicationsByCandidate(Long candidateId) {
+
+        accessControlService.requireCandidateOwnership(candidateId);
 
         return applicationRepository.findByCandidateId(candidateId)
                 .stream()

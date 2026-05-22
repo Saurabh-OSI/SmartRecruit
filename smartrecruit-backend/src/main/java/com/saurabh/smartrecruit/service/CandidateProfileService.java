@@ -12,20 +12,26 @@ import com.saurabh.smartrecruit.entity.User;
 import com.saurabh.smartrecruit.exception.BadRequestException;
 import com.saurabh.smartrecruit.repository.CandidateProfileRepository;
 import com.saurabh.smartrecruit.repository.UserRepository;
+import com.saurabh.smartrecruit.security.AccessControlService;
 
 @Service
 public class CandidateProfileService {
 
     private final CandidateProfileRepository candidateProfileRepository;
     private final UserRepository userRepository;
+    private final AccessControlService accessControlService;
 
     public CandidateProfileService(CandidateProfileRepository candidateProfileRepository,
-                                   UserRepository userRepository) {
+                                   UserRepository userRepository,
+                                   AccessControlService accessControlService) {
         this.candidateProfileRepository = candidateProfileRepository;
         this.userRepository = userRepository;
+        this.accessControlService = accessControlService;
     }
 
     public CandidateProfileResponse createProfile(CandidateProfileRequest request) {
+
+        accessControlService.requireCandidateOwnership(request.getUserId());
 
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new BadRequestException("User not found with id: " + request.getUserId()));
@@ -54,10 +60,14 @@ public class CandidateProfileService {
         CandidateProfile profile = candidateProfileRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Candidate profile not found with id: " + id));
 
+        accessControlService.requireCandidateOwnership(profile.getUser().getId());
+
         return mapToResponse(profile);
     }
 
     public CandidateProfileResponse getProfileByUserId(Long userId) {
+
+        accessControlService.requireCandidateOwnership(userId);
 
         CandidateProfile profile = candidateProfileRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("Candidate profile not found for user id: " + userId));
@@ -78,6 +88,12 @@ public class CandidateProfileService {
         CandidateProfile profile = candidateProfileRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Candidate profile not found with id: " + id));
 
+        accessControlService.requireCandidateOwnership(profile.getUser().getId());
+
+        if (!profile.getUser().getId().equals(request.getUserId())) {
+            throw new BadRequestException("Profile userId cannot be changed");
+        }
+
         profile.setPhone(request.getPhone());
         profile.setEducation(request.getEducation());
         profile.setExperience(request.getExperience());
@@ -95,6 +111,8 @@ public class CandidateProfileService {
 
         CandidateProfile profile = candidateProfileRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Candidate profile not found with id: " + id));
+
+        accessControlService.requireCandidateOwnership(profile.getUser().getId());
 
         candidateProfileRepository.delete(profile);
 

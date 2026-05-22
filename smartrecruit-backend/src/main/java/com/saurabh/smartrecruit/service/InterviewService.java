@@ -7,8 +7,10 @@ import com.saurabh.smartrecruit.entity.ApplicationStatus;
 import com.saurabh.smartrecruit.entity.Interview;
 import com.saurabh.smartrecruit.entity.InterviewStatus;
 import com.saurabh.smartrecruit.entity.JobApplication;
+import com.saurabh.smartrecruit.exception.ResourceNotFoundException;
 import com.saurabh.smartrecruit.repository.ApplicationRepository;
 import com.saurabh.smartrecruit.repository.InterviewRepository;
+import com.saurabh.smartrecruit.security.AccessControlService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,11 +21,14 @@ public class InterviewService {
 
     private final InterviewRepository interviewRepository;
     private final ApplicationRepository applicationRepository;
+    private final AccessControlService accessControlService;
 
     public InterviewService(InterviewRepository interviewRepository,
-                            ApplicationRepository applicationRepository) {
+                            ApplicationRepository applicationRepository,
+                            AccessControlService accessControlService) {
         this.interviewRepository = interviewRepository;
         this.applicationRepository = applicationRepository;
+        this.accessControlService = accessControlService;
     }
 
     public InterviewResponse scheduleInterview(InterviewRequest request) {
@@ -61,10 +66,17 @@ public class InterviewService {
         Interview interview = interviewRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Interview not found with id: " + id));
 
+        accessControlService.requireCandidateOwnership(interview.getApplication().getCandidate().getId());
+
         return mapToResponse(interview);
     }
 
     public List<InterviewResponse> getInterviewsByApplication(Long applicationId) {
+
+        JobApplication application = applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Application not found with id: " + applicationId));
+
+        accessControlService.requireCandidateOwnership(application.getCandidate().getId());
 
         return interviewRepository.findByApplicationId(applicationId)
                 .stream()
